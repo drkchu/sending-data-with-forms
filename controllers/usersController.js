@@ -3,14 +3,27 @@ const { body, validationResult } = require("express-validator");
 
 const alphaErr = "must only contain letters.";
 const lengthErr = "must be between 1 and 10 characters.";
+const emailErr = "must be formatted correctly";
+const ageErr = "much be an age between 18 and 120"
+const maxLengthErr = "maximum of 200 characters"
 
 const validateUser = [
     body("firstName").trim()
-      .isAlpha().withMessage(`First name ${alphaErr}`)
-      .isLength({ min: 1, max: 10 }).withMessage(`First name ${lengthErr}`),
+        .isAlpha().withMessage(`First name ${alphaErr}`)
+        .isLength({ min: 1, max: 10 }).withMessage(`First name ${lengthErr}`),
+    
     body("lastName").trim()
-      .isAlpha().withMessage(`Last name ${alphaErr}`)
-      .isLength({ min: 1, max: 10 }).withMessage(`Last name ${lengthErr}`),
+        .isAlpha().withMessage(`Last name ${alphaErr}`)
+        .isLength({ min: 1, max: 10 }).withMessage(`Last name ${lengthErr}`),
+    
+    body("email").trim()
+        .isEmail().withMessage(`Email ${emailErr}`),
+    
+    body("age").trim()
+        .isInt({ min: 18, max: 120 }).withMessage(`Age ${ageErr}`),
+
+    body("bio").optional().trim()
+        .isLength({ max: 200 }).withMessage(`Bio ${maxLengthErr}`)
   ];
 
 exports.usersListGet = (req, res) => {
@@ -37,8 +50,8 @@ exports.usersCreatePost = [
           errors: errors.array(),
         });
       }
-      const { firstName, lastName } = req.body;
-      usersStorage.addUser({ firstName, lastName });
+      const { firstName, lastName, email, age, bio } = req.body;
+      usersStorage.addUser({ firstName, lastName, email, age, bio });
       res.redirect("/");
     }
   ];
@@ -63,8 +76,8 @@ exports.usersCreatePost = [
           errors: errors.array(),
         });
       }
-      const { firstName, lastName } = req.body;
-      usersStorage.updateUser(req.params.id, { firstName, lastName });
+      const { firstName, lastName, email, age, bio } = req.body;
+      usersStorage.updateUser(req.params.id, { firstName, lastName, email, age, bio });
       res.redirect("/");
     }
   ];
