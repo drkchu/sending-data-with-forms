@@ -20,6 +20,16 @@
     <input type="text" name="bio" id="bio">
     <button type="submit">Submit</button>
   </form>
+  <form action="/search" method="GET">
+    <h3>Search for a specific user:</h3>
+    <label for="getFirstName">First name:</label>
+    <input type="text" name="getFirstName" id="getFirstName" required>
+    <label for="getLastName">Last name:</label>
+    <input type="text" name="getLastName" id="getLastName" required>
+    <label for="getEmail">Email:</label>
+    <input type="text" name="getEmail" id="getEmail" required>
+    <button type="submit">Search!</button>
+  </form>
   <a href="/">Back to home</a>
 </body>
 </html>
