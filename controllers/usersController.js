@@ -28,7 +28,7 @@ exports.usersCreateGet = (req, res) => {
 
 // We can pass an entire array of middleware validations to our controller.
 exports.usersCreatePost = [
-    validateUser,
+    validateUser, // So this is ran first, then the second fn
     (req, res) => {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
@@ -42,5 +42,39 @@ exports.usersCreatePost = [
       res.redirect("/");
     }
   ];
+
+  exports.usersUpdateGet = (req, res) => {
+    const user = usersStorage.getUser(req.params.id);
+    res.render("updateUser", {
+      title: "Update user",
+      user: user,
+    });
+  };
+  
+  exports.usersUpdatePost = [
+    validateUser,
+    (req, res) => {
+      const user = usersStorage.getUser(req.params.id);
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).render("updateUser", {
+          title: "Update user",
+          user: user,
+          errors: errors.array(),
+        });
+      }
+      const { firstName, lastName } = req.body;
+      usersStorage.updateUser(req.params.id, { firstName, lastName });
+      res.redirect("/");
+    }
+  ];
+
+// Tell the server to delete a matching user, if any. Otherwise, respond with an error.
+exports.usersDeletePost = (req, res) => {
+    usersStorage.deleteUser(req.params.id);
+    res.redirect("/");
+  };
+  
+  
 
 
